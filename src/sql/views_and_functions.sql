@@ -18,6 +18,14 @@ CREATE OR REPLACE VIEW vue_livre AS
 SELECT id_livre,titre,description,date_parution,prix,quantite,auteur,nb_page,nom_genre
 FROM LIVRE NATURAL JOIN GENRE;
 
+CREATE OR REPLACE VIEW vue_all_produit AS
+(SELECT id_produit,titre,description,compositeur as maker,quantite FROM CD NATURAL JOIN PRODUIT
+UNION
+SELECT id_produit,titre,description,realisateur as maker,quantite FROM DVD NATURAL JOIN PRODUIT
+UNION
+SELECT id_produit,titre,description, auteur as maker,quantite FROM LIVRE NATURAL JOIN PRODUIT)
+ORDER BY id_produit;
+
 CREATE OR REPLACE VIEW vue_all_abonne AS
 SELECT *
 FROM PERSONNE
@@ -55,7 +63,6 @@ WHERE statut = 'gestionnaire';
 --
 
 DELIMITER // -- delimeter needs to be putted for PHPmyAdmin to understand that we're treating with a procedure
-
 DROP PROCEDURE IF EXISTS view_all_emprunt //
 
 CREATE PROCEDURE view_all_emprunt( id INT )
@@ -65,13 +72,75 @@ WHERE id_personne= id
 ;
 END
 //
-
 DELIMITER ;
 
 
 
 
 
+
+
+
+
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS inscription//
+CREATE PROCEDURE inscription(l_prenom VARCHAR(64),l_nom VARCHAR(64),l_numero VARCHAR(16), l_adresse VARCHAR(256), l_mail VARCHAR(256),l_birthdate DATE, l_password VARCHAR(64),l_statut VARCHAR(64))
+BEGIN
+DECLARE age TIMESTAMP;
+SELECT TIMESTAMPDIFF(YEAR, l_birthdate, CURDATE()) INTO age;
+
+IF age < 16 THEN
+  SIGNAL SQLSTATE '45000'
+			 SET MESSAGE_TEXT = "Age minimum";
+ELSE
+  INSERT INTO PERSONNE (prenom, nom, numero, adresse, mail,birthdate, password, statut, locked, dateFinAbo) VALUES
+  (l_prenom,l_nom,l_numero,l_adresse,l_mail,l_birthdate,SHA(l_password),l_statut,FALSE,DATE_ADD(SYSDATE(),INTERVAL 1 YEAR));
+END IF;
+END
+//
+DELIMITER ;
+
+
+
+
+
+
+
+
+
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS create_emprunt//
+
+CREATE PROCEDURE create_emprunt(id_pro int,id_per int)
+BEGIN
+
+DECLARE qte,cd,dvd,livre INT;
+SELECT id_cd INTO cd FROM PRODUIT WHERE id_produit=id_pro;
+SELECT id_dvd INTO dvd FROM PRODUIT WHERE id_produit=id_pro;
+SELECT id_livre INTO livre FROM PRODUIT WHERE id_produit=id_pro;
+
+IF cd IS NOT NULL THEN
+  SELECT quantite INTO qte FROM CD WHERE id_cd=cd;
+END IF;
+IF dvd IS NOT NULL THEN
+  SELECT quantite INTO qte FROM DVD WHERE id_dvd=dvd;
+END IF;
+IF livre IS NOT NULL THEN
+  SELECT quantite INTO qte FROM LIVRE WHERE id_livre=livre;
+END IF;
+
+IF qte < 1 THEN
+  SIGNAL SQLSTATE '45000'
+			 SET MESSAGE_TEXT = "Il n'y a plus ce produit en stock";
+ELSE
+  INSERT INTO EMPRUNT (dateDebut,dateRetour,prolongeable,recupere,id_produit,id_personne) VALUES
+  (SYSDATE(),DATE_ADD(SYSDATE(),INTERVAL 3 MONTH),TRUE,FALSE,id_pro,id_per);
+END IF;
+END
+//
+DELIMITER ;
 
 
 
@@ -91,8 +160,8 @@ DELIMITER ;
 CREATE OR REPLACE TRIGGER add_produit_from_livre
 AFTER INSERT ON LIVRE
 FOR EACH ROW
-  INSERT INTO PRODUIT (id_dvd,id_cd,id_livre) VALUES
-  (null,null,NEW.id_livre);
+INSERT INTO PRODUIT (id_dvd,id_cd,id_livre) VALUES
+(null,null,NEW.id_livre);
 
 CREATE OR REPLACE TRIGGER add_produit_from_cd
 AFTER INSERT ON CD
@@ -105,3 +174,50 @@ AFTER INSERT ON DVD
 FOR EACH ROW
 INSERT INTO PRODUIT (id_dvd,id_cd,id_livre) VALUES
 (NEW.id_dvd,null,null);
+
+
+DELIMITER //
+CREATE OR REPLACE TRIGGER sub_quantite
+AFTER INSERT ON EMPRUNT
+FOR EACH ROW
+
+BEGIN
+  DECLARE cd,dvd,livre INT;
+  SELECT id_cd INTO cd FROM PRODUIT WHERE id_produit=NEW.id_produit;
+  SELECT id_dvd INTO dvd FROM PRODUIT WHERE id_produit=NEW.id_produit;
+  SELECT id_livre INTO livre FROM PRODUIT WHERE id_produit=NEW.id_produit;
+
+  IF cd IS NOT NULL THEN
+    UPDATE CD SET quantite=quantite-1 WHERE id_cd=cd;
+  END IF;
+  IF dvd IS NOT NULL THEN
+    UPDATE dvd SET quantite=quantite-1 WHERE id_dvd=dvd;
+  END IF;
+  IF livre IS NOT NULL THEN
+    UPDATE livre SET quantite=quantite-1 WHERE id_livre=livre;
+  END IF;
+END//
+
+
+
+DELIMITER //
+CREATE OR REPLACE TRIGGER add_quantite
+AFTER DELETE ON EMPRUNT
+FOR EACH ROW
+
+BEGIN
+  DECLARE cd,dvd,livre INT;
+  SELECT id_cd INTO cd FROM PRODUIT WHERE id_produit=OLD.id_produit;
+  SELECT id_dvd INTO dvd FROM PRODUIT WHERE id_produit=OLD.id_produit;
+  SELECT id_livre INTO livre FROM PRODUIT WHERE id_produit=OLD.id_produit;
+
+  IF cd IS NOT NULL THEN
+    UPDATE CD SET quantite=quantite+1 WHERE id_cd=cd;
+  END IF;
+  IF dvd IS NOT NULL THEN
+    UPDATE dvd SET quantite=quantite+1 WHERE id_dvd=dvd;
+  END IF;
+  IF livre IS NOT NULL THEN
+    UPDATE livre SET quantite=quantite+1 WHERE id_livre=livre;
+  END IF;
+END//

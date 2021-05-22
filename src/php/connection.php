@@ -255,6 +255,74 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Perform query
+    $query="CALL view_all_emprunt(1)";
+    echo "<br>Performing procedure view_all_emprunt :";
+
+
+
+
+
+    //prepare display tab
+    echo '<table border="0" cellspacing="2" cellpadding="2">
+      <tr>
+          <td> <font face="Arial">id_emprunnt</font> </td>
+          <td> <font face="Arial">dateDebut</font> </td>
+          <td> <font face="Arial">dateRetour</font> </td>
+          <td> <font face="Arial">prolongeable</font> </td>
+          <td> <font face="Arial">recupere</font> </td>
+          <td> <font face="Arial">id_produit</font> </td>
+          <td> <font face="Arial">id_personne</font></font> </td>
+      </tr>';
+
+    if ($result = $mysqli -> query($query)) {
+        /* fetch associative array */
+      while ($row = $result->fetch_assoc()) {
+          $id = $row["id_emprunt"];
+          $prenom = $row["dateDebut"];
+          $nom = $row["dateRetour"];
+          $num = $row["prolongeable"];
+          $adresse = $row["recupere"];
+          $mail = $row["id_produit"];
+          $birthdate = $row["id_personne"];
+
+          echo '<tr>
+                 <td>'.$id.'</td>
+                 <td>'.$prenom.'</td>
+                 <td>'.$nom.'</td>
+                 <td>'.$num.'</td>
+                 <td>'.$adresse.'</td>
+                 <td>'.$mail.'</td>
+                 <td>'.$birthdate.'</td>
+             </tr>';
+      }
+      // Free result set
+      $result -> free_result();
+    }
+    echo '</table>';
+
+
+
     $mysqli -> close();
     echo "<br>Closed conection as user :".$username;
     echo "<br>--------------------------------------------------";
