@@ -18,6 +18,9 @@ CREATE OR REPLACE VIEW vue_livre AS
 SELECT id_livre,titre,description,date_parution,prix,quantite,auteur,nb_page,nom_genre
 FROM LIVRE NATURAL JOIN GENRE;
 
+
+-- view to check all product and facilitate the search
+-- this view returns id_produit, title (may it be livre,cd or dvd), description (same), maker as the autor OR director OR compositor and the quantite
 CREATE OR REPLACE VIEW vue_all_produit AS
 (SELECT id_produit,titre,description,compositeur as maker,quantite FROM CD NATURAL JOIN PRODUIT
 UNION
@@ -62,6 +65,9 @@ WHERE statut = 'gestionnaire';
 --
 --
 
+
+
+-- function to see all emprunt of a given as arg personne (given as id_personne)
 DELIMITER // -- delimeter needs to be putted for PHPmyAdmin to understand that we're treating with a procedure
 DROP PROCEDURE IF EXISTS view_all_emprunt //
 
@@ -82,7 +88,7 @@ DELIMITER ;
 
 
 
-
+-- fonction to sign in using every personnal information and hashing the given password, also checking minimum age
 DELIMITER //
 DROP PROCEDURE IF EXISTS inscription//
 CREATE PROCEDURE inscription(l_prenom VARCHAR(64),l_nom VARCHAR(64),l_numero VARCHAR(16), l_adresse VARCHAR(256), l_mail VARCHAR(256),l_birthdate DATE, l_password VARCHAR(64),l_statut VARCHAR(64))
@@ -109,7 +115,28 @@ DELIMITER ;
 
 
 
+--fonction to connect preventing SQLi, returns 0 for invalid crendentials and 1 for valid crendentials
+DELIMITER //
+CREATE OR REPLACE FUNCTION connection(l_prenom VARCHAR(64),l_nom VARCHAR(64), l_password VARCHAR(64))
+RETURNS INT DETERMINISTIC
+BEGIN
+  DECLARE r INT;
+  SELECT COUNT(*) INTO r FROM PERSONNE WHERE prenom = l_prenom AND nom=l_nom AND password = SHA(l_password) ;
+  RETURN r;
 
+END
+//
+DELIMITER ;
+
+
+
+
+
+
+
+
+
+--fonction to create an emprunt with arg1 : id_produit and arg2: id_personne
 DELIMITER //
 DROP PROCEDURE IF EXISTS create_emprunt//
 
@@ -176,6 +203,9 @@ INSERT INTO PRODUIT (id_dvd,id_cd,id_livre) VALUES
 (NEW.id_dvd,null,null);
 
 
+
+
+-- trigger to decrement quantite when an emprunt is set
 DELIMITER //
 CREATE OR REPLACE TRIGGER sub_quantite
 AFTER INSERT ON EMPRUNT
@@ -200,6 +230,9 @@ END//
 
 
 
+
+
+--trigger to incremement quantite when an emprunt is deleted
 DELIMITER //
 CREATE OR REPLACE TRIGGER add_quantite
 AFTER DELETE ON EMPRUNT
