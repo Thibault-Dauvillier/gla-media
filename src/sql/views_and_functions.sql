@@ -93,12 +93,12 @@ DELIMITER //
 DROP PROCEDURE IF EXISTS inscription//
 CREATE PROCEDURE inscription(l_prenom VARCHAR(64),l_nom VARCHAR(64),l_numero VARCHAR(16), l_adresse VARCHAR(256), l_mail VARCHAR(256),l_birthdate DATE, l_password VARCHAR(64),l_statut VARCHAR(64))
 BEGIN
-DECLARE age TIMESTAMP;
+DECLARE age INT;
 SELECT TIMESTAMPDIFF(YEAR, l_birthdate, CURDATE()) INTO age;
 
 IF age < 16 THEN
   SIGNAL SQLSTATE '45000'
-			 SET MESSAGE_TEXT = "Age minimum";
+			 SET MESSAGE_TEXT = "Age minimum necessaire non atteint";
 ELSE
   INSERT INTO PERSONNE (prenom, nom, numero, adresse, mail,birthdate, password, statut, locked, dateFinAbo) VALUES
   (l_prenom,l_nom,l_numero,l_adresse,l_mail,l_birthdate,SHA(l_password),l_statut,FALSE,DATE_ADD(SYSDATE(),INTERVAL 1 YEAR));
