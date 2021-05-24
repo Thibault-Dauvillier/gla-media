@@ -48,6 +48,19 @@ WHERE statut = 'gestionnaire';
 
 
 
+-- THIS IS AND EVENT, made to happen every day, calls to check every subscription to check if they're still valid
+-- needs the event_shceduller var ON to work
+SET GLOBAL event_scheduler=ON;
+DROP EVENT IF EXISTS check_abo;
+CREATE EVENT check_abo
+  ON SCHEDULE
+    EVERY 1 DAY
+  DO
+   CALL lock_on_date()
+
+
+
+
 
 
 
@@ -117,13 +130,82 @@ DELIMITER ;
 
 --fonction to connect preventing SQLi, returns 0 for invalid crendentials and 1 for valid crendentials
 DELIMITER //
-CREATE OR REPLACE FUNCTION connection(l_prenom VARCHAR(64),l_nom VARCHAR(64), l_password VARCHAR(64))
-RETURNS INT DETERMINISTIC
+DROP PROCEDURE IF EXISTS connection//
+CREATE PROCEDURE connection(l_mail VARCHAR(256), l_password VARCHAR(64))
 BEGIN
   DECLARE r INT;
-  SELECT COUNT(*) INTO r FROM PERSONNE WHERE prenom = l_prenom AND nom=l_nom AND password = SHA(l_password) ;
-  RETURN r;
+  SELECT COUNT(*) INTO r FROM PERSONNE WHERE  mail=l_mail AND password = SHA(l_password);
+  IF r = 1 THEN
+    SELECT* FROM PERSONNE WHERE  mail=l_mail AND password = SHA(l_password);
+  ELSE
+    SIGNAL SQLSTATE '45000'
+			 SET MESSAGE_TEXT = "Le mdp ou le mail est mauvais";
+  END IF;
+END
+//
+DELIMITER ;
 
+
+
+
+
+
+--fonction to check if the subscription is over, and fi yes, lock the account (will run daily with an event scheduler)
+DELIMITER //
+DROP PROCEDURE IF EXISTS lock_on_date//
+CREATE PROCEDURE lock_on_date()
+BEGIN
+    DECLARE date_abo DATE;
+    DECLARE id INT;
+    DECLARE finished INTEGER DEFAULT 0;
+    DECLARE cur CURSOR FOR SELECT dateFinAbo,id_personne FROM vue_all_abonne ;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET finished = 1;
+
+    OPEN cur;
+
+    checking: LOOP
+
+  		FETCH cur INTO date_abo,id;
+
+  		IF finished = 1 THEN
+  			LEAVE checking;
+  		END IF;
+
+  		IF date_abo < SYSDATE() THEN
+        CALL lock_account(id);
+      END IF;
+
+	   END LOOP checking;
+	CLOSE cur;
+END
+//
+
+
+
+
+-- procedure to lock and account using id as arg
+DELIMITER //
+DROP PROCEDURE IF EXISTS lock_account//
+CREATE PROCEDURE lock_account(id INT)
+BEGIN
+UPDATE PERSONNE SET locked = TRUE WHERE id_personne = id;
+END
+//
+DELIMITER ;
+
+
+
+
+
+
+
+-- procedure to renew a subscription (+1 year based on sysdate)
+DELIMITER //
+DROP PROCEDURE IF EXISTS nouveau_abonnement//
+CREATE PROCEDURE nouveau_abonnement(id_p INT)
+BEGIN
+UPDATE PERSONNE SET dateFinAbo = DATE_ADD(SYSDATE(),INTERVAL 1 YEAR) WHERE id_personne = id_p;
+UPDATE PERSONNE SET locked = FALSE WHERE id_personne = id_p;
 END
 //
 DELIMITER ;
@@ -201,7 +283,6 @@ AFTER INSERT ON DVD
 FOR EACH ROW
 INSERT INTO PRODUIT (id_dvd,id_cd,id_livre) VALUES
 (NEW.id_dvd,null,null);
-
 
 
 
