@@ -131,12 +131,12 @@ DELIMITER ;
 --fonction to connect preventing SQLi, returns 0 for invalid crendentials and 1 for valid crendentials
 DELIMITER //
 DROP PROCEDURE IF EXISTS connection//
-CREATE PROCEDURE connection(l_mail VARCHAR(256), l_password VARCHAR(64))
+CREATE PROCEDURE connection(l_mail VARCHAR(256), l_password VARCHAR(64), l_statut VARCHAR(64))
 BEGIN
   DECLARE r INT;
-  SELECT COUNT(*) INTO r FROM PERSONNE WHERE  mail=l_mail AND password = SHA(l_password);
+  SELECT COUNT(*) INTO r FROM PERSONNE WHERE  mail=l_mail AND password = SHA(l_password) AND statut=l_statut;
   IF r = 1 THEN
-    SELECT id_personne,nom,prenom,mail,locked,statut FROM PERSONNE WHERE  mail=l_mail AND password = SHA(l_password);
+    SELECT id_personne,nom,prenom,mail,locked,statut FROM PERSONNE WHERE  mail=l_mail AND password = SHA(l_password) AND statut=l_statut;
   ELSE
     SIGNAL SQLSTATE '45000'
 			 SET MESSAGE_TEXT = "Le mdp ou le mail est mauvais";
@@ -211,6 +211,25 @@ END
 DELIMITER ;
 
 
+-- procedure to renew a subscription (+1 year based on sysdate)
+DELIMITER //
+DROP PROCEDURE IF EXISTS etendre_emprunt//
+CREATE PROCEDURE etendre_emprunt(id_emp INT)
+BEGIN
+DECLARE flag TINYINT;
+SELECT prolongeable INTO flag FROM EMPRUNT WHERE id_emprunt = id_emp;
+IF flag = 1 THEN
+  UPDATE EMPRUNT SET prolongeable = FALSE WHERE id_emprunt = id_emp;
+  UPDATE EMPRUNT SET dateRetour = DATE_ADD(dateRetour,INTERVAL 3 WEEK) WHERE id_emprunt = id_emp;
+ELSE
+SIGNAL SQLSTATE '45000'
+   SET MESSAGE_TEXT = "Cette emprunt est improlongeable";
+END IF;
+END
+//
+DELIMITER ;
+
+
 
 
 
@@ -225,7 +244,7 @@ DROP PROCEDURE IF EXISTS create_emprunt//
 CREATE PROCEDURE create_emprunt(id_pro int,id_per int)
 BEGIN
 
-DECLARE qte,cd,dvd,livre INT;
+DECLARE qte,cd,dvd,livre,nb INT;
 SELECT id_cd INTO cd FROM PRODUIT WHERE id_produit=id_pro;
 SELECT id_dvd INTO dvd FROM PRODUIT WHERE id_produit=id_pro;
 SELECT id_livre INTO livre FROM PRODUIT WHERE id_produit=id_pro;
@@ -240,7 +259,9 @@ IF livre IS NOT NULL THEN
   SELECT quantite INTO qte FROM LIVRE WHERE id_livre=livre;
 END IF;
 
-IF qte < 1 THEN
+SELECT COUNT(*) INTO nb FROM EMPRUNT WHERE id_personne=id_per;
+
+IF qte < 1 AND nb > 4  THEN
   SIGNAL SQLSTATE '45000'
 			 SET MESSAGE_TEXT = "Il n'y a plus ce produit en stock";
 ELSE

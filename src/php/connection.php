@@ -15,8 +15,8 @@ class Connection{
 
 
     function initConnectionAbonne(){
-        $this->username = 'alex';
-        $this->password = 'liebe-99';
+        $this->username = 'abonne';
+        $this->password = 'abonne';
 
         $this->conn= new mysqli($this->servername, $this->username, $this->password, $this->db);
         if ($this->conn->connect_errno) {
@@ -25,8 +25,8 @@ class Connection{
     }
 
     function initConnectionEmploye(){
-        $this->username = 'alex';
-        $this->password = 'liebe-99';
+        $this->username = 'employee';
+        $this->password = 'employee';
 
         $this->conn= new mysqli($this->servername, $this->username, $this->password, $this->db);
         if ($this->conn->connect_errno) {
