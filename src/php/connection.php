@@ -25,8 +25,8 @@ class Connection{
     }
 
     function initConnectionEmploye(){
-        $this->username = 'employee';
-        $this->password = 'employee';
+        $this->username = 'employe';
+        $this->password = 'employe';
 
         $this->conn= new mysqli($this->servername, $this->username, $this->password, $this->db);
         if ($this->conn->connect_errno) {
