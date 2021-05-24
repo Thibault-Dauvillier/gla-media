@@ -1,9 +1,9 @@
 <?php
 
     require_once "Connection.php";
+    require_once  "Personne.php";
 
-    $nom=$_POST["nom"];
-    $prenom=$_POST["prenom"];
+    $email=$_POST["email"];
     $mdp=$_POST["mdp"];
     $statut=$_POST["statut"];
 
@@ -18,19 +18,20 @@
     else{
         $connection->initConnectionEmploye();
     }
-    $sql=" select gla_database.connection('".$prenom."','".$nom."', '".$mdp."');";
+    $sql=" CALL connection('".$email."','".$mdp."');";
     $result=mysqli_query($connection->conn,$sql);
 
-    $row = mysqli_fetch_array($result);
-/*
-    if ($row[0]== 1) {
-
-        $ligne = $res->fetch_array();
-        echo $ligne;
-        $personne = new Personne($res[0], $res[1], $res[2], $res[3], $res[4], $res[5], $res[6], $res[7], $res[8], $res[9], $res[10]);
-
-    } else {
-        echo "votre mail ou mots de passe ne son pas correct";
+    if($result->num_rows!=1){
+        die("mail ou mots de passe incorrect");
     }
-*/
+    else{
+        $row = mysqli_fetch_array($result);
+        $personne = new Personne($row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6], $row[7], $row[8], $row[9], $row[10]);
+
+        session_start();
+        $_SESSION["compte"]=$personne;
+
+    }
+
     $connection->closeConnection();
+    header('Location: ../html/index.html');
