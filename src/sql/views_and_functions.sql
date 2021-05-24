@@ -136,7 +136,7 @@ BEGIN
   DECLARE r INT;
   SELECT COUNT(*) INTO r FROM PERSONNE WHERE  mail=l_mail AND password = SHA(l_password);
   IF r = 1 THEN
-    SELECT* FROM PERSONNE WHERE  mail=l_mail AND password = SHA(l_password);
+    SELECT id_personne,nom,prenom,mail,locked,statut FROM PERSONNE WHERE  mail=l_mail AND password = SHA(l_password);
   ELSE
     SIGNAL SQLSTATE '45000'
 			 SET MESSAGE_TEXT = "Le mdp ou le mail est mauvais";
