@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <title>Page Signin</title>
+
+</head>
+<body>
+    <meta charset="UTF-8">
+    <title>Inscription</title>
+    <h2>Inscription</h2>
+
+    <form action="../php/signin.php" method="post">>
+        Email:<input type="email" name="email"></br>
+        Password:<input type="password" name="mdp"></br>
+        Nom:<input type="text" name="nom"></br>
+        Prenom:<input type="text" name="prenom"></br>
+        Tel:<input type="tel"  name="tel" pattern="[0-9]{10}"></br>
+        Adresse:<input type="text" name="adresse"></br>
+        Date de naissance:<input type="date" name="dnaissance"></br>
+        Employe:<input type="checkbox" name="statut" value="employe">
+        <input type="submit" value="inscription">
+
+    </form>
+
+</body>
+</html>

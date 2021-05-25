@@ -195,6 +195,25 @@ DELIMITER ;
 
 
 
+-- procedure to change password
+DELIMITER //
+DROP PROCEDURE IF EXISTS change_password//
+CREATE PROCEDURE change_password(id INT,old VARCHAR(64), new VARCHAR(64))
+BEGIN
+    DECLARE r INT;
+    SELECT COUNT(*) INTO r FROM PERSONNE WHERE  id_personne = id AND password = SHA(old);
+    IF r = 1 THEN
+      UPDATE PERSONNE SET password = SHA(new) WHERE id_personne = id;
+    ELSE
+      SIGNAL SQLSTATE '45000'
+  			 SET MESSAGE_TEXT = "l'ancien mdp est mauvais";
+    END IF;
+END
+//
+DELIMITER ;
+
+
+
 
 
 
