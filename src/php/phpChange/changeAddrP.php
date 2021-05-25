@@ -1,24 +1,23 @@
 <?php
 
-    require_once "../Personne.php";
+
     require_once "../Connection.php";
 
     session_start();
-    $compte=$_SESSION["compte"];
+
 
     $newAddr=$_POST["newAddr"];
-
     $connection= new Connection();
 
-    if($compte->getStatut()=="abonne"){
+    if(strcmp($_SESSION["statut"],"abonne")){
         $connection->initConnectionAbonne();
     }
-    elseif($compte->getStatut()=="employe"){
+    elseif(strcmp($_SESSION["statut"],"employe")){
         $connection->initConnectionEmploye();
     }
 
 
-    $sql="UPDATE PERSONNE SET adresse= '".$newAddr."' WHERE id_personne='". $compte->getIdPersonne()."';";
+    $sql="UPDATE PERSONNE SET adresse= '".$newAddr."' WHERE id_personne='". $_SESSION["id"]."';";
     mysqli_query($connection->conn,$sql);
 
     $connection->closeConnection();

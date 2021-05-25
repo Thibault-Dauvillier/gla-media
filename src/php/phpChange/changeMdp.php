@@ -1,6 +1,4 @@
 <?php
-
-    require_once "../Personne.php";
     require_once "../Connection.php";
 
     session_start();
@@ -11,21 +9,19 @@
 
     $connection= new Connection();
 
-    if($compte->getStatut()=="abonne"){
+    if(strcmp($_SESSION["statut"],"abonne")){
         $connection->initConnectionAbonne();
     }
-    elseif($compte->getStatut()=="employe"){
+    elseif(strcmp($_SESSION["statut"],"employe")){
         $connection->initConnectionEmploye();
     }
 
-    $sql="call change_password(".$compte->getIdPersonne().",'".$oldMdp."','".$newMpd."');";
-    mysqli_query($connection->conn, $sql);
-    $connection->closeConnection();
-
+    $sql="call change_password(".$_SESSION["id"].",'".$oldMdp."','".$newMpd."');";
     $result=mysqli_query($connection->conn,$sql);
 
     if(!$result){
         echo $connection->conn->error;
+        echo "<script>window.top.postMessage('chgMdpF', '*')</script>";
         exit;
     }
 

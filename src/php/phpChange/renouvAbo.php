@@ -1,7 +1,6 @@
 <?php
 
 
-require_once "../Personne.php";
 require_once "../Connection.php";
 
 
@@ -10,16 +9,16 @@ if(isset($_POST["subscribe"])){
     echo "test";
 
     session_start();
-    $compte = $_SESSION["compte"];
     $connection = new Connection();
 
-    if ($compte->getStatut() == "abonne") {
+    if(strcmp($_SESSION["statut"],"abonne")){
         $connection->initConnectionAbonne();
-    } elseif ($compte->getStatut() == "employe") {
+    }
+    elseif(strcmp($_SESSION["statut"],"employe")){
         $connection->initConnectionEmploye();
     }
 
-    $sql = "CALL nouveau_abonnement(" . $compte->getIdPersonne() . ");";
+    $sql = "CALL nouveau_abonnement(" . $_SESSION["id"] . ");";
     mysqli_query($connection->conn, $sql);
     $connection->closeConnection();
 }
