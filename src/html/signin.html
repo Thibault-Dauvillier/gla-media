@@ -1,28 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+    <head>
 
-    <meta charset="UTF-8">
-    <title>Page Signin</title>
+        <meta charset="UTF-8">
+        <title>Page Signin</title>
+        <link rel="stylesheet" type="text/css" href="../css/signin.css">
 
-</head>
-<body>
-    <meta charset="UTF-8">
-    <title>Inscription</title>
-    <h2>Inscription</h2>
+    </head>
+    <body>
+        <meta charset="UTF-8">
+        <title>Inscription</title>
+        <h1>Inscription</h1>
+        <div class="loginbox">
+            <img src="../img/avatar.png" class="avatar"></img>
+            <h2>Vos Information</h2>
+            <form action="../php/signin.php" method="post">
+                <h3>Email:<input type="email" name="email"></h3></br>
+                <h3>Password:<input type="password" name="mdp"></h3></br>
+                <h3>Nom:<input type="text" name="nom"></h3></br>
+                <h3>Prenom:<input type="text" name="prenom"></h3></br>
+                <h3>Tel:<input type="tel"  name="tel" pattern="[0-9]{10}"></h3></br>
+                <h3>Adresse:<input type="text" name="adresse"></h3></br>
+                <h3>Date de naissance:<input type="date" name="dnaissance"></h3></br>
+                <h3>J'accepte de souscrire a un abonnement:<input type="checkbox"  onchange="subscribeChange()"  name="subscribe" id="subscribe"></h3>
+                <input id="submitBtn" type="submit" value="inscription" disabled="true">
+            </form>
+        </div>
+    </body>
 
-    <form action="../php/signin.php" method="post">>
-        Email:<input type="email" name="email"></br>
-        Password:<input type="password" name="mdp"></br>
-        Nom:<input type="text" name="nom"></br>
-        Prenom:<input type="text" name="prenom"></br>
-        Tel:<input type="tel"  name="tel" pattern="[0-9]{10}"></br>
-        Adresse:<input type="text" name="adresse"></br>
-        Date de naissance:<input type="date" name="dnaissance"></br>
-        Employe:<input type="checkbox" name="statut" value="employe">
-        <input type="submit" value="inscription">
 
-    </form>
+    <script>
+        function subscribeChange() {
+            var checkBox = document.getElementById("subscribe");
+            if (checkBox.checked) {
+                document.getElementById("submitBtn").disabled = false;
+            }
+            if (!checkBox.checked) {
+                document.getElementById("submitBtn").disabled = true;
+            }
+        }
+    </script>
 
-</body>
 </html>
