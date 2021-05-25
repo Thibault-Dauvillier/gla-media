@@ -1,9 +1,7 @@
 <?php
 
     require_once "Connection.php";
-    require_once  "Personne.php";
-
-
+   
     $email=$_POST["email"];
     $mdp=$_POST["mdp"];
     $statut;
