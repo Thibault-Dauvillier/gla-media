@@ -22,33 +22,33 @@ class Personne
 
     }
 
-    public function getIdPersonne(): int
+    public function getIdPersonne()
     {
         return $this->id_personne;
     }
 
-    public function getNom(): string
+    public function getNom()
     {
         return $this->nom;
     }
 
-    public function getPrenom(): string
+    public function getPrenom()
     {
         return $this->prenom;
     }
 
 
-    public function getLocked(): int
+    public function getLocked()
     {
         return $this->locked;
     }
 
-    public function getMail(): string
+    public function getMail()
     {
         return $this->mail;
     }
 
-    public function getStatut(): string
+    public function getStatut()
     {
         return $this->statut;
     }
