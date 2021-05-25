@@ -6,29 +6,19 @@ class Personne
     private  $id_personne;
     private  $prenom;
     private  $nom;
-    private  $numero;
-    private  $adresse;
     private  $mail;
-    private  $birthdate;
-    private  $password;
     private  $statut;
     private  $locked;
-    private  $dateFinAbo;
 
-    public function __construct($id_personne,$prenom,$nom,$numero,$adress,$mail,$birthdate,$password,$statut,$locked,$dateFinAbo)
+    public function __construct($id_personne,$prenom,$nom,$mail,$statut,$locked)
     {
 
         $this->id_personne=$id_personne;
         $this->prenom=$prenom;
         $this->nom=$nom;
-        $this->numero=$numero;
-        $this->adresse=$adress;
         $this->mail=$mail;
-        $this->birthdate=$birthdate;
-        $this->password=$password;
-        $this->$statut=$statut;
+        $this->statut=$statut;
         $this->locked=$locked;
-        $this->dateFinAbo=$dateFinAbo;
 
     }
 
@@ -47,29 +37,7 @@ class Personne
         return $this->prenom;
     }
 
-    /**
-     * @return string
-     */
-    public function getAdresse(): string
-    {
-        return $this->adresse;
-    }
 
-    /**
-     * @return string
-     */
-    public function getBirthdate(): string
-    {
-        return $this->birthdate;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDateFinAbo(): string
-    {
-        return $this->dateFinAbo;
-    }
 
     /**
      * @return int
@@ -87,13 +55,6 @@ class Personne
         return $this->mail;
     }
 
-    /**
-     * @return string
-     */
-    public function getNumero(): string
-    {
-        return $this->numero;
-    }
 
     /**
      * @return string
