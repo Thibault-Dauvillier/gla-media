@@ -45,6 +45,7 @@ require_once "Connection.php";
                     </br></br>
                     <button class='btn' onclick='chMdp()'>Modifier son mot de passe</button>
                     <iframe class='mdpFrame' hidden='true' id='chgMdp' src='../html/htmlChange/changeMdp.html'></iframe>
+                    <a href='consulte.php'>Retour</a>
                 </div>
                 <script src='../js/showHiddeIframe.js'></script>
             </body>
