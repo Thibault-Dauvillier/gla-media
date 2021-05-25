@@ -17,7 +17,7 @@ class Personne
         $this->prenom=$prenom;
         $this->nom=$nom;
         $this->mail=$mail;
-        $this->$statut=$statut;
+        $this->statut=$statut;
         $this->locked=$locked;
 
     }
