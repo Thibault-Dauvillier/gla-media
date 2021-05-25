@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>connexion</title>
+    <link rel="stylesheet" type="text/css" href="../css/login.css">
+  </head>
+  <body>
+    <nav>
+      <ul id="nav">
+            <li><a href="index.php"> Accueil</a></li>
+            <li><a href="Aporopos.php">À propos de la médiathèque</a></li>
+            <li><a href="consulter_catalogue.php">consulter le catalogue</a></li>
+            <li><a href="aboutOpenHours.php">help</a></li>
+           
+      </ul>	
+    <div class="loginbox">
+        <img src="..img/avatar.png" class="avatar">
+        <h2>S'identifier</h2>
+                <img src="../img/avatar.png" class="avatar">
+                <form action="../php/login.php" method="post">
+                    <label>Email</label><br>
+                    <input type="text" id = "email" name="email" required/><br>
+                    <label>Mot de passe</label>
+                    <input type="password" id = "password" name="mdp" required /><br>
+                    <label>Employee </label><input type="checkbox" name="statut" value="employe"><br>
+                    <input type="submit" class="connexion" value="Connection"/>
+                    <a href="inscription.html">inscription</a> 
+                </form>
+</body>
+</html>
