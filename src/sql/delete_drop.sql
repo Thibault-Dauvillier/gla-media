@@ -13,6 +13,7 @@ DROP VIEW vue_livre;
 DROP VIEW vue_all_abonne;
 DROP VIEW vue_all_employe;
 DROP VIEW vue_all_gestionnaire;
+DROP VIEW vue_all_produit;
 
 
 DROP TABLE EMPRUNT;
