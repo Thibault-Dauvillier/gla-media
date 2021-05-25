@@ -1,16 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Page login</title>
-</head>
-<body>
-    <form action="../php/login.php" method="post">
-        Email:<input type="email" name="email">
-        Mot De passe:<input type="password" name="mdp"></br>
-        Employe:<input type="checkbox" name="statut" value="employe">
-        <input type="submit" value="Connection">
-    </form>
-
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>connexion</title>
+    <link rel="stylesheet" type="text/css" href="../css/login.css">
+  </head>
+  <body>
+    <nav>
+      <ul id="nav">
+            <li><a href="index.php"> Accueil</a></li>
+            <li><a href="Aporopos.php">À propos de la médiathèque</a></li>
+            <li><a href="consulter_catalogue.php">consulter le catalogue</a></li>
+            <li><a href="aboutOpenHours.php">help</a></li>
+           
+      </ul>	
+    <div class="loginbox">
+        <h2>S'identifier</h2>
+                <img src="../img/avatar.png" class="avatar">
+                <form action="../php/login.php" method="post">
+                    <label>Email</label><br>
+                    <input type="text" id = "email" name="email" required/><br>
+                    <label>Mot de passe</label>
+                    <input type="password" id = "password" name="mdp" required /><br>
+                    <label>Employee </label><input type="checkbox" name="statut" value="employe"><br>
+                    <input type="submit" class="connexion" value="Connection"/><br><br><br>
+                    <label>Vous n'avez pas de compte? </label><a href="signin.html">inscription</a> 
+                </form>
 </body>
 </html>
