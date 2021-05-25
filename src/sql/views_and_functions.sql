@@ -86,8 +86,21 @@ DROP PROCEDURE IF EXISTS view_all_emprunt //
 
 CREATE PROCEDURE view_all_emprunt( id INT )
 BEGIN
-SELECT * FROM EMPRUNT
+SELECT * FROM EMPRUNT NATURAL JOIN vue_all_produit
 WHERE id_personne= id
+;
+END
+//
+DELIMITER ;
+
+
+-- function to see all emprunt of a given as arg personne (given as id_personne)
+DELIMITER // -- delimeter needs to be putted for PHPmyAdmin to understand that we're treating with a procedure
+DROP PROCEDURE IF EXISTS set_recupere //
+
+CREATE PROCEDURE set_recupere( id INT )
+BEGIN
+UPDATE EMPRUNT SET recupere = 1 WHERE id_emprunt = id;
 ;
 END
 //
