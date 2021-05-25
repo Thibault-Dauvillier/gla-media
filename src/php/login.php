@@ -10,19 +10,22 @@
     $connection=new Connection();
     $nbRow=0;
 
-
-    if($statut!="employe"){
-        $statut="abonne";
-        $connection->initConnectionAbonne();
+    if(isset($statut)){
+        $connection->initConnectionEmploye();
     }
     else{
-        $connection->initConnectionEmploye();
+        $statut="abonne";
+        $connection->initConnectionAbonne();
     }
     $sql=" CALL connection('".$email."','".$mdp."','".$statut."');";
     $result=mysqli_query($connection->conn,$sql);
 
-    if($result->num_rows!=1){
-        die("mail ou mots de passe incorrect");
+
+
+    if(!$result){
+        echo $connection->conn->error;
+        header('Location: ../html/login.html');
+        exit;
     }
     else{
         $row = mysqli_fetch_array($result);
@@ -34,4 +37,5 @@
     }
 
     $connection->closeConnection();
-    header('Location: menu.php');
+    header('Location: monCompte.php');
+    exit;

@@ -3,12 +3,12 @@
 
 class Personne
 {
-    private int $id_personne;
-    private string $prenom;
-    private string $nom;
-    private string $mail;
-    private string $statut;
-    private int $locked;
+    private $id_personne;
+    private $prenom;
+    private $nom;
+    private $mail;
+    private $statut;
+    private $locked;
 
     public function __construct($id_personne,$nom,$prenom,$mail,$locked,$statut)
     {
