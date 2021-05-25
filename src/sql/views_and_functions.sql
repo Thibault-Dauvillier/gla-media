@@ -7,16 +7,16 @@
 --
 --
 CREATE OR REPLACE VIEW vue_dvd AS
-SELECT id_dvd,titre,description,date_parution,prix,quantite,realisateur,editeur,duree,nom_genre
-FROM DVD NATURAL JOIN GENRE;
+SELECT id_dvd,titre,description,date_parution,prix,quantite,realisateur,editeur,duree,nom_genre,id_produit
+FROM DVD NATURAL JOIN PRODUIT NATURAL JOIN GENRE;
 
 CREATE OR REPLACE VIEW vue_cd AS
-SELECT id_cd,titre,description,date_parution,prix,quantite,compositeur,duree,nom_genre
-FROM CD NATURAL JOIN GENRE;
+SELECT id_cd,titre,description,date_parution,prix,quantite,compositeur,duree,nom_genre,id_produit
+FROM CD NATURAL JOIN PRODUIT NATURAL JOIN GENRE;
 
 CREATE OR REPLACE VIEW vue_livre AS
-SELECT id_livre,titre,description,date_parution,prix,quantite,auteur,nb_page,nom_genre
-FROM LIVRE NATURAL JOIN GENRE;
+SELECT id_livre,titre,description,date_parution,prix,quantite,auteur,nb_page,nom_genre,id_produit
+FROM LIVRE NATURAL JOIN PRODUIT NATURAL JOIN GENRE;
 
 
 -- view to check all product and facilitate the search
@@ -293,9 +293,9 @@ END IF;
 
 SELECT COUNT(*) INTO nb FROM EMPRUNT WHERE id_personne=id_per;
 
-IF qte < 1 AND nb > 4  THEN
+IF qte < 1 OR nb > 4  THEN
   SIGNAL SQLSTATE '45000'
-			 SET MESSAGE_TEXT = "Il n'y a plus ce produit en stock";
+			 SET MESSAGE_TEXT = "Il n'y a plus ce produit en stock ou vous avez déja trop d'emprunt";
 ELSE
   INSERT INTO EMPRUNT (dateDebut,dateRetour,prolongeable,recupere,id_produit,id_personne) VALUES
   (SYSDATE(),DATE_ADD(SYSDATE(),INTERVAL 3 MONTH),TRUE,FALSE,id_pro,id_per);

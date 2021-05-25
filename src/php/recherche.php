@@ -6,30 +6,46 @@
     <link rel="stylesheet" type="text/css" href="../css/consulter_catalogue.css">
   </head>
   <body>
+
     <nav>
       <ul id="nav">
-  			    <li><a href="index.php"> Accueil</a></li>
-  					<li><a href="a_propos.php">À propos de la médiathèque</a></li>
-  					<li><a href="consulter_catalogue.php">Consulter le catalogue</a></li>
-            <li><a href="employe.php">Employe</a></li>
+            <li><a href="index.php"> Accueil</a></li>
+            <li><a href="a_propos.php">À propos de la médiathèque</a></li>
+            <li><a href="consulter_catalogue.php">Consulter le catalogue</a></li>
+            <?php
+            session_start();
+            if(!isset($_SESSION["id"])){
+              echo '<li><a href="../html/login.html">Se connecter</a></li>';
+            }
+            else{
+              if((strcmp($_SESSION["statut"],"abonne") == 0)){
+                echo '<li><a href="../php/mes_emprunts.php">Mes emprunts</a></li>
+                <li><a href="../php/monCompte.php">Mon Compte</a></li>';
+              }
+              else{
+                echo '<li><a href="../php/employe.php">Employe</a></li>';
+              }
+
+            }
+            ?>
       </ul>
     </nav>
     <h2>Consulter le Catalogue</h2><br>
-    
+
     <div class= rech>
     <form action="recherche.php" method="post">
         <input  type="text" name="nom" id ="nom" placeholder="Search" aria-label="Search"required/>
         <input  type="submit" value="Recherche Par titre"/>
         <input  type="submit" value="Recherche Par auteur "/>
       <input  type="submit" value="Recherche Par genre "/>
-    
+
     <input  type ="submit" value="Recherche Par disponibilité" onclick= "window.location.href ='recherche_par_dispo.php'"/>
     </form>
   </div>
 
 
     <?php
-    session_start();
+
 
     require_once  "Connection.php";
 
@@ -178,6 +194,3 @@ echo '</table>';
 ?>
   </body>
 </html>
-   
-
-

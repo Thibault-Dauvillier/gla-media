@@ -1,7 +1,7 @@
 <?php
 
     require_once "Connection.php";
-   
+
     $email=$_POST["email"];
     $mdp=$_POST["mdp"];
     $statut;
@@ -36,10 +36,9 @@
     }
     else {
         $row = mysqli_fetch_array($result);
-        $personne = new Personne($row[0], $row[1], $row[2], $row[3], $row[4], $row[5]);
 
         session_start();
-         
+
         $_SESSION["id"]=$row[0];
         $_SESSION["nom"]=$row[1];
         $_SESSION["prenom"]=$row[2];

@@ -6,16 +6,30 @@
     <link rel="stylesheet" type="text/css" href="../css/consulter_catalogue.css">
   </head>
   <body>
-    <nav>
-      <ul id="nav">
-  			    <li><a href="index.php"> Accueil</a></li>
-  					<li><a href="a_propos.php">À propos de la médiathèque</a></li>
-  					<li><a href="consulter_catalogue.php">Consulter le catalogue</a></li>
-  					<li><a href="employe.php">Employe</a></li>
+      <nav>
+        <ul id="nav">
+              <li><a href="index.php"> Accueil</a></li>
+              <li><a href="a_propos.php">À propos de la médiathèque</a></li>
+              <li><a href="consulter_catalogue.php">Consulter le catalogue</a></li>
+              <?php
+              session_start();
+              if(!isset($_SESSION["id"])){
+                echo '<li><a href="../html/login.html">Se connecter</a></li>';
+              }
+              else{
+                if((strcmp($_SESSION["statut"],"abonne") == 0)){
+                  echo '<li><a href="../php/mes_emprunts.php">Mes emprunts</a></li>
+                  <li><a href="../php/monCompte.php">Mon Compte</a></li>';
+                }
+                else{
+                  echo '<li><a href="../php/employe.php">Employe</a></li>';
+                }
 
-      </ul>
-    </nav>
-    <h2>Consulter le Catalogue</h2><br>
+              }
+              ?>
+        </ul>
+      </nav>
+    <h2>Page Employe</h2>
 
 
     <?php
@@ -37,44 +51,96 @@
 
 
     // Perform query
-    $query="SELECT * FROM `vue_livre`";
+    $query="SELECT * FROM vue_emprunt";
     //prepare display tab
+    echo '<h5 class="l">Liste des emprunts</h5><br/></br/></br/></br/>';
     echo '<table id="produit" border="10" cellspacing="2" cellpadding="2">
       <tr>
 
           <td> <h3>ID</h3></td>
-          <td> <h3><font face="Arial">Titres</font></h3> </td>
-          <td> <h3><font face="Arial">Description</font> </h3></td>
-          <td> <h3><font face="Arial">date de parution</font> </h3></td>
-          <td> <h3><font face="Arial">Nombre d\'exemplaires</font></h3> </td>
-          <td><h3> <font face="Arial">Auteur</font></h3> </td>
-          <td><h3> <font face="Arial">Genre</font> </h3></td>
-          <td> <h3><font face="Arial">Reserver</font></h3> </td>
-
-
+          <td> <h3><font face="Arial">Titre</font></h3> </td>
+          <td> <h3><font face="Arial">User</font> </h3></td>
+          <td> <h3><font face="Arial">Debut</font> </h3></td>
+          <td> <h3><font face="Arial">Retour</font></h3> </td>
+          <td><h3> <font face="Arial">Prolonger</font></h3> </td>
+          <td><h3> <font face="Arial">SUPPRIMER</font> </h3></td>
       </tr>';
 
     if ($result = $mysqli -> query($query)) {
         /* fetch associative array */
       while ($row = $result->fetch_assoc()) {
-          $id = $row["id_livre"];
+          $id = $row["id_emprunt"];
+          $debut= $row["dateDebut"];
+          $retour = $row["dateRetour"];
+          $prolongeable = $row["prolongeable"];
+          $recupere = $row["recupere"];
+          $id_produit = $row["id_produit"];
+          $id_personne = $row["id_personne"];
+          $mail = $row["mail"];
           $titre = $row["titre"];
-          $description= $row["description"];
-          $date = $row["date_parution"];
-          $quantite = $row["quantite"];
-          $auteur = $row["auteur"];
-          $genre = $row["nom_genre"];
 
           echo '<tr>
                  <td>'.$id.'</td>
                  <td>'.$titre.'</td>
-                 <td>'.$description.'</td>
+                 <td>'.$mail.'</td>
+                 <td>'.$debut.'</td>
+                 <td>'.$retour.'</td>';
+                 if($prolongeable == 1){
+                  echo '<td> <a href ="reserver.php"</a>Prolonger</td>';
+                 }
+                 else{
+                  echo "<td>Cet emprunt n'est pas prolongeable</td>";
+                 }
+                echo '<td> <a href ="reserver.php"</a>Supprimer</td>';
+             echo '</tr>';
+      }
+      // Free result set
+      $result -> free_result();
+    }
+    echo '</table>';
+
+
+    $query="SELECT * FROM vue_all_abonne";
+    echo "<br /><br />";
+    echo '<h5 class="l">Liste des abonnés</h5><br/></br/></br/></br/>';
+    echo '<table id="produit" border="10" cellspacing="2" cellpadding="2">
+      <tr>
+
+          <td> <h3>ID</h3></td>
+          <td> <h3><font face="Arial">Prenom</font></h3> </td>
+          <td> <h3><font face="Arial">Nom</font> </h3></td>
+          <td> <h3><font face="Arial">Mail</font> </h3></td>
+          <td> <h3><font face="Arial">Verouillé</font></h3> </td>
+          <td><h3> <font face="Arial">Fin Abonnement</font></h3> </td>
+          <td><h3> <font face="Arial"></font> </h3></td>
+      </tr>';
+
+    if ($result = $mysqli -> query($query)) {
+        /* fetch associative array */
+      while ($row = $result->fetch_assoc()) {
+          $id = $row["id_personne"];
+          $prenom= $row["prenom"];
+          $nom = $row["nom"];
+          $mail = $row["mail"];
+          $locked = $row["locked"];
+          $date = $row["dateFinAbo"];
+
+
+          echo '<tr>
+                 <td>'.$id.'</td>
+                 <td>'.$prenom.'</td>
+                 <td>'.$nom.'</td>
+                 <td>'.$mail.'</td>';
+                 if($locked == 1){
+                  echo '<td>Oui</td>';
+                 }
+                 else{
+                  echo "<td>Non</td>";
+                 }
+                 echo '
                  <td>'.$date.'</td>
-                 <td>'.$quantite.'</td>
-                 <td>'.$auteur.'</td>
-                 <td>'.$genre.'</td>
-                 <td> <a href ="reserver.php"</a>Reserver</td>
-             </tr>';
+                 <td> <a href ="reserver.php"</a>Verouiller</td>';
+             echo '</tr>';
       }
       // Free result set
       $result -> free_result();

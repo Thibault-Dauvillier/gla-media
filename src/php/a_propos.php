@@ -12,13 +12,28 @@
 	</head>
 	<body>
 
+
     <nav>
       <ul id="nav">
             <li><a href="index.php"> Accueil</a></li>
             <li><a href="a_propos.php">À propos de la médiathèque</a></li>
             <li><a href="consulter_catalogue.php">Consulter le catalogue</a></li>
-            <li><a href="employe.php">Employe</a></li>
+            <?php
+            session_start();
+            if(!isset($_SESSION["id"])){
+              echo '<li><a href="../html/login.html">Se connecter</a></li>';
+            }
+            else{
+              if((strcmp($_SESSION["statut"],"abonne") == 0)){
+                echo '<li><a href="../php/mes_emprunts.php">Mes emprunts</a></li>
+                <li><a href="../php/monCompte.php">Mon Compte</a></li>';
+              }
+              else{
+                echo '<li><a href="../php/employe.php">Employe</a></li>';
+              }
 
+            }
+            ?>
       </ul>
     </nav>
   <div class = bouton_connexion ><a href="aboutRules.php">Se connecter</a></div>
