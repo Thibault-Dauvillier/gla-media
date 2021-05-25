@@ -6,169 +6,178 @@
     <link rel="stylesheet" type="text/css" href="../css/consulter_catalogue.css">
   </head>
   <body>
-  <nav>
-    <ul id="nav">
-            <li><a href="index.php"> Accueil</a></li>
-            <li><a href="Aporopos.php">À propos de la médiathèque</a></li>
-            <li><a href="consulter_catalogue.php">consulter le catalogue</a></li>
-            <li><a href="aboutOpenHours.php">help</a></li>
-            <li><a href="aboutOpenHours.php">Se connecter</a></li>
-      </ul>	
+    <nav>
+      <ul id="nav">
+  			    <li><a href="index.php"> Accueil</a></li>
+  					<li><a href="a_propos.php">À propos de la médiathèque</a></li>
+  					<li><a href="consulter_catalogue.php">Consulter le catalogue</a></li>
+            <li><a href="employe.php">Employe</a></li>
+      </ul>
     </nav>
     <h2>Consulter le Catalogue</h2><br>
     
     <div class= rech>
     <form action="recherche.php" method="post">
-        <input  type="text" name="nom" id ="nom" placeholder="Search" aria-label="Search"  />
+        <input  type="text" name="nom" id ="nom" placeholder="Search" aria-label="Search"required/>
         <input  type="submit" value="Recherche Par titre"/>
-        <input  type="submit" value="Recherche Par description "/>
         <input  type="submit" value="Recherche Par auteur "/>
-        <input  type="submit" value="Recherche Par genre "/></form>
+      <input  type="submit" value="Recherche Par genre "/>
     
     <input  type ="submit" value="Recherche Par disponibilité" onclick= "window.location.href ='recherche_par_dispo.php'"/>
-</div>
-<?php
-require_once "Connection.php";
-$nom = $_POST['nom'];
-$query="SELECT * FROM `vue_livre` where titre = '$nom'";
+    </form>
+  </div>
+
+
+    <?php
+    session_start();
+
+    require_once  "Connection.php";
+
+    $connection=new Connection();
+    $connection->initConnectionAbonne();;
+    $nom = $_POST['nom'];
+    echo'<div class="l"> LIVRES </div>';
+    echo'<br><br>';
+    $query="SELECT * FROM `vue_livre` where titre = '$nom'  or nom_genre ='$nom' or auteur= '$nom' ";
+    echo '<table id="produit" border="10" cellspacing="2" cellpadding="2">
+      <tr>
+          <td> <h3>ID</h3></td>
+          <td> <h3><font face="Arial">Titres</font></h3> </td>
+          <td> <h3><font face="Arial">Description</font> </h3></td>
+          <td> <h3><font face="Arial">date de parution</font> </h3></td>
+          <td> <h3><font face="Arial">Nombre d\'exemplaires</font></h3> </td>
+          <td><h3> <font face="Arial">Auteur</font></h3> </td>
+          <td><h3> <font face="Arial">Genre</font> </h3></td>
+          <td> <h3><font face="Arial">Reserver</font></h3> </td>
+      </tr>';
+
+    if ($result = $connection->conn -> query($query)) {
+        /* fetch associative array */
+      while ($row = $result->fetch_assoc()) {
+          $id = $row["id_livre"];
+          $titre = $row["titre"];
+          $description= $row["description"];
+          $date = $row["date_parution"];
+          $quantite = $row["quantite"];
+          $auteur = $row["auteur"];
+          $genre = $row["nom_genre"];
+
+          echo '<tr>
+                 <td>'.$id.'</td>
+                 <td>'.$titre.'</td>
+                 <td>'.$description.'</td>
+                 <td>'.$date.'</td>
+                 <td>'.$quantite.'</td>
+                 <td>'.$auteur.'</td>
+                 <td>'.$genre.'</td>
+                <td> <a href ="reserver.php"</a>Reserver</td>';
+      }
+      // Free result set
+      $result -> free_result();
+    }
+    echo '</table>';
+
+    //----------------------------------------------------------------------------------------------
+    echo'<div class="l"> CD </div>';
+    echo'<br><br>';
+    $query="SELECT * FROM `vue_CD` where titre = '$nom' or nom_genre = '$nom' or compositeur = '$nom'";
+    //prepare display tab
+    echo '<table id="produit" border="10" cellspacing="2" cellpadding="2">
+      <tr>
+
+          <td> <h3>ID</h3></td>
+          <td> <h3><font face="Arial">Titres</font></h3> </td>
+          <td> <h3><font face="Arial">Description</font> </h3></td>
+          <td> <h3><font face="Arial">date de parution</font> </h3></td>
+          <td> <h3><font face="Arial">Nombre d\'exemplaires</font></h3> </td>
+          <td><h3> <font face="Arial">compositeur</font></h3> </td>
+          <td><h3> <font face="Arial">Genre</font> </h3></td>
+          <td><h3> <font face="Arial">Duree</font> </h3></td>
+          <td> <h3><font face="Arial">Reserver</font></h3> </td>
+
+
+      </tr>';
+
+    if ($result = $connection->conn -> query($query)) {
+        /* fetch associative array */
+      while ($row = $result->fetch_assoc()) {
+          $id = $row["id_cd"];
+          $titre = $row["titre"];
+          $description= $row["description"];
+          $date = $row["date_parution"];
+          $quantite = $row["quantite"];
+          $auteur = $row["compositeur"];
+          $genre = $row["nom_genre"];
+          $duree = $row["duree"];
+
+          echo '<tr>
+                 <td>'.$id.'</td>
+                 <td>'.$titre.'</td>
+                 <td>'.$description.'</td>
+                 <td>'.$date.'</td>
+                 <td>'.$quantite.'</td>
+                 <td>'.$auteur.'</td>
+                 <td>'.$genre.'</td>
+                 <td>'.$duree.'</td>
+                <td> <a href ="reserver.php"</a>Reserver</td>';
+      }
+      // Free result set
+      $result -> free_result();
+    }
+    echo '</table>';
+//-----------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------
+echo'<div class="l"> DVD </div>';
+echo'<br><br>';
+$query="SELECT * FROM `vue_DVD` where titre = '$nom' or nom_genre = '$nom' or realisateur ='$nom'";
+//prepare display tab
 echo '<table id="produit" border="10" cellspacing="2" cellpadding="2">
-<tr>
-    
-    <td> <h3>ID</h3></td>
-    <td> <h3><font face="Arial">Titres</font></h3> </td>
-    <td> <h3><font face="Arial">Description</font> </h3></td>
-    <td> <h3><font face="Arial">date de parution</font> </h3></td>
-    <td> <h3><font face="Arial">Nombre d\'exemplaires</font></h3> </td>
-    <td><h3> <font face="Arial">Auteur</font></h3> </td>
-    <td><h3> <font face="Arial">Genre</font> </h3></td>
-    <td> <h3><font face="Arial">Reserver</font></h3> </td>
-    
-   
-</tr>';
+  <tr>
+
+      <td> <h3>ID</h3></td>
+      <td> <h3><font face="Arial">Titres</font></h3> </td>
+      <td> <h3><font face="Arial">Description</font> </h3></td>
+      <td> <h3><font face="Arial">date de parution</font> </h3></td>
+      <td> <h3><font face="Arial">Nombre d\'exemplaires</font></h3> </td>
+      <td><h3> <font face="Arial">Realisateur</font></h3> </td>
+      <td><h3> <font face="Arial">Genre</font> </h3></td>
+      <td><h3> <font face="Arial">Duree</font> </h3></td>
+      <td> <h3><font face="Arial">Reserver</font></h3> </td>
 
 
-if ($result = $mysqli -> query($query)) {
-  /* fetch associative array */
-while ($row = $result->fetch_assoc()) {
-    $id = $row["id_livre"];
-    $titre = $row["titre"];
-    $description= $row["description"];
-    $date = $row["date_parution"];
-    $quantite = $row["quantite"];
-    $auteur = $row["auteur"];
-    $genre = $row["nom_genre"];
+  </tr>';
 
-    echo '<tr>
-           <td>'.$id.'</td>
-           <td>'.$titre.'</td>
-           <td>'.$description.'</td>
-           <td>'.$date.'</td>
-           <td>'.$quantite.'</td>
-           <td>'.$auteur.'</td>
-           <td>'.$genre.'</td>
-           <td> <a href ="reserver.php"</a>Reserver</td>
-       </tr>';
-}
-// Free result set
-$result -> free_result();
-}
+if ($result = $connection->conn -> query($query)) {
+    /* fetch associative array */
+  while ($row = $result->fetch_assoc()) {
+      $id = $row["id_dvd"];
+      $titre = $row["titre"];
+      $description= $row["description"];
+      $date = $row["date_parution"];
+      $quantite = $row["quantite"];
+      $auteur = $row["realisateur"];
+      $duree = $row["duree"];
+      $genre = $row["nom_genre"];
 
-//---------------------------
-$query1="SELECT * FROM `vue_livre` where description = '$nom'";
-
-
-if ($result = $mysqli -> query($query1)) {
- 
-
-  /* fetch associative array */
-while ($row = $result->fetch_assoc()) {
-    $id = $row["id_livre"];
-    $titre = $row["titre"];
-    $description= $row["description"];
-    $date = $row["date_parution"];
-    $quantite = $row["quantite"];
-    $auteur = $row["auteur"];
-    $genre = $row["nom_genre"];
-
-    echo '<tr>
-           <td>'.$id.'</td>
-           <td>'.$titre.'</td>
-           <td>'.$description.'</td>
-           <td>'.$date.'</td>
-           <td>'.$quantite.'</td>
-           <td>'.$auteur.'</td>
-           <td>'.$genre.'</td>
-           <td> <a href ="reserver.php"</a>Reserver</td>
-       </tr>';
-}
-// Free result set
-$result -> free_result();
-}
-//---------------------------------------------------
-$query2="SELECT * FROM `vue_livre` where auteur = '$nom'";
-
-
-if ($result = $mysqli -> query($query2)) {
- 
-
-  /* fetch associative array */
-while ($row = $result->fetch_assoc()) {
-    $id = $row["id_livre"];
-    $titre = $row["titre"];
-    $description= $row["description"];
-    $date = $row["date_parution"];
-    $quantite = $row["quantite"];
-    $auteur = $row["auteur"];
-    $genre = $row["nom_genre"];
-
-    echo '<tr>
-           <td>'.$id.'</td>
-           <td>'.$titre.'</td>
-           <td>'.$description.'</td>
-           <td>'.$date.'</td>
-           <td>'.$quantite.'</td>
-           <td>'.$auteur.'</td>
-           <td>'.$genre.'</td>
-           <td> <a href ="reserver.php"</a>Reserver</td>
-       </tr>';
-}
-// Free result set
-$result -> free_result();
-}
-//--------------------------------------------------
-$query3="SELECT * FROM `vue_livre` where nom_genre = '$nom'";
-
-
-if ($result = $mysqli -> query($query3)) {
- 
-
-  /* fetch associative array */
-while ($row = $result->fetch_assoc()) {
-    $id = $row["id_livre"];
-    $titre = $row["titre"];
-    $description= $row["description"];
-    $date = $row["date_parution"];
-    $quantite = $row["quantite"];
-    $auteur = $row["auteur"];
-    $genre = $row["nom_genre"];
-
-    echo '<tr>
-           <td>'.$id.'</td>
-           <td>'.$titre.'</td>
-           <td>'.$description.'</td>
-           <td>'.$date.'</td>
-           <td>'.$quantite.'</td>
-           <td>'.$auteur.'</td>
-           <td>'.$genre.'</td>
-           <td> <a href ="reserver.php"</a>Reserver</td>
-       </tr>';
-}
-// Free result set
-$result -> free_result();
+      echo '<tr>
+             <td>'.$id.'</td>
+             <td>'.$titre.'</td>
+             <td>'.$description.'</td>
+             <td>'.$date.'</td>
+             <td>'.$quantite.'</td>
+             <td>'.$auteur.'</td>
+             <td>'.$genre.'</td>
+             <td>'.$duree.'</td>
+            <td> <a href ="reserver.php"</a>Reserver</td>';
+  }
+  // Free result set
+  $result -> free_result();
 }
 echo '</table>';
 
 ?>
-
-</body>
+  </body>
 </html>
+   
+
+
