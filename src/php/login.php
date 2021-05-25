@@ -41,7 +41,13 @@
         $personne = new Personne($row[0], $row[1], $row[2], $row[3], $row[4], $row[5]);
 
         session_start();
-        $_SESSION["compte"]=$personne;
+         
+        $_SESSION["id"]=$row[0];
+        $_SESSION["nom"]=$row[1];
+        $_SESSION["prenom"]=$row[2];
+        $_SESSION["email"]=$row[3];
+        $_SESSION["locked"]=$row[4];
+        $_SESSION["statut"]=$row[5];
 
 
     //$connection->closeConnection();
