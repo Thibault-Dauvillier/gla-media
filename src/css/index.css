@@ -1,0 +1,61 @@
+body {
+    background-image:url(../img/image.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+h1{
+    font-family: 'crete Round',serif;
+    font-size: 90px;
+    text-align: center;
+    color : rgb(165, 19, 19);
+}
+
+#nav li {
+    display: inline;
+   }
+   #nav li a {
+    padding: 10px 20px ;
+    background:  rgb(173, 6, 6); 
+    color: #fff ;
+    border: 1px solid #600 ;
+    font: 1em "Trebuchet MS",Arial,sans-serif ;
+    line-height: 1em ;
+    text-align: center ;
+    text-decoration: none ;
+  }
+  #nav li a:hover, #nav li a:focus, #nav li a:active {
+    background: #900 ;
+    text-decoration: underline ;
+  }
+  .box {
+  border: 0;
+  line-height: 2.5;
+  padding: 10 20px;
+  font-size: 1rem;
+  text-align: center;
+  color:black;
+  text-shadow: 1px 1px 1px #000;
+  border-radius: 10px;
+  
+  background-color : rgb(231, 222, 222);
+  box-shadow: inset 2px 2px 3px rgba(255, 255, 255, .6),
+              inset -2px -2px 3px rgba(0, 0, 0, .6);
+  position: absolute;
+  left: 20%;
+  top: 50%;
+  right: 20%
+}
+.bouton_connexion a {
+  padding: 10px 20px ;
+  background:  rgb(173, 6, 6); 
+  color: #fff ;
+  border: 1px solid #600 ;
+  font: 1em "Trebuchet MS",Arial,sans-serif ;
+  line-height: 1em ;
+  text-align: center ;
+  text-decoration: none ;
+  position: absolute;
+  left: 45%;
+  top: 30%;
+}
