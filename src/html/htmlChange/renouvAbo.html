@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>changeMdp</title>
+</head>
+<body>
+    <h2 align="center">Modification de mot de passe</h2>
+    <form align="center" action="../../php/phpChange/renouvAbo.php" method="post">
+        <h3 align="center">J'accepte de souscrire a un abonnement:<input type="checkbox"  onchange="subscribeChange()"  name="subscribe" value="checked" id="subscribe"></h3>
+        <input align="center" id="submitBtn" type="submit" value="renouvler son abonnement" disabled="true">
+    </form>
+
+    <script>
+        function subscribeChange() {
+            var checkBox = document.getElementById("subscribe");
+            if (checkBox.checked) {
+                document.getElementById("submitBtn").disabled = false;
+            }
+            if (!checkBox.checked) {
+                document.getElementById("submitBtn").disabled = true;
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
