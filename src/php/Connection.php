@@ -5,11 +5,11 @@
 //testing connection with user abonne
 class Connection{
 
-    private String $servername = 'localhost';
-    private String $db = 'gla_database';
+    private $servername = 'localhost';
+    private $db = 'gla_database';
 
-    private String $username;
-    private String $password;
+    private $username;
+    private $password;
 
     public $conn;
 
