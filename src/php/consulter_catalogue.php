@@ -6,6 +6,17 @@
     <link rel="stylesheet" type="text/css" href="../css/consulter_catalogue.css">
   </head>
   <body>
+
+  <?php
+  function runMyFunction() {
+    $sql=" CALL create_emprunt(".$id.",3)";
+    $result=mysqli_query($connection->conn,$sql);
+  }
+
+  if (isset($_GET['id'])) {
+    runMyFunction();
+  }
+  ?>
     <nav>
       <ul id="nav">
   			    <li><a href="index.php"> Accueil</a></li>
@@ -77,7 +88,7 @@
                  <td>'.$auteur.'</td>
                  <td>'.$genre.'</td>';
                  if(isset($_SESSION["compte"])){
-                echo'<td> <a href ="reserver.php"</a>Reserver</td>';
+                echo'<td> <a href ="consulter_catalogue.php?id="'.$id.'</a> Reserver</td>';
                  }else{
                    echo'<td> <B> veuillez vous connectez pour emprunter les documents </B><td>';
                  }
