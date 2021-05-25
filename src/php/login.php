@@ -18,7 +18,7 @@
     else{
         $connection->initConnectionEmploye();
     }
-    $sql=" CALL connection('".$email."','".$mdp."');";
+    $sql=" CALL connection('".$email."','".$mdp."','".$statut."');";
     $result=mysqli_query($connection->conn,$sql);
 
     if($result->num_rows!=1){
@@ -26,7 +26,7 @@
     }
     else{
         $row = mysqli_fetch_array($result);
-        $personne = new Personne($row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6], $row[7], $row[8], $row[9], $row[10]);
+        $personne = new Personne($row[0], $row[1], $row[2], $row[3], $row[4], $row[5]);
 
         session_start();
         $_SESSION["compte"]=$personne;
@@ -34,4 +34,4 @@
     }
 
     $connection->closeConnection();
-    header('Location: ../html/index.html');
+    header('Location: menu.php');
