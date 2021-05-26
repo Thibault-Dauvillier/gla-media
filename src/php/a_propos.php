@@ -24,6 +24,7 @@
               echo '<li><a href="../html/login.html">Se connecter</a></li>';
             }
             else{
+	      echo '<li><a href="deconnection.php">Se deconnecter</a></li>';
               if((strcmp($_SESSION["statut"],"abonne") == 0)){
                 echo '<li><a href="../php/mes_emprunts.php">Mes emprunts</a></li>
                 <li><a href="../php/monCompte.php">Mon Compte</a></li>';
