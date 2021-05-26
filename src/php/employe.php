@@ -11,13 +11,13 @@
               <li><a href="index.php"> Accueil</a></li>
               <li><a href="a_propos.php">À propos de la médiathèque</a></li>
               <li><a href="consulter_catalogue.php">Consulter le catalogue</a></li>
-              <li><a href="deconnection.php">Se deconnecter</a></li>
               <?php
               session_start();
               if(!isset($_SESSION["id"])){
                 echo '<li><a href="../html/login.html">Se connecter</a></li>';
               }
               else{
+                echo '<li><a href="deconnection.php">Se deconnecter</a></li>';
                 if((strcmp($_SESSION["statut"],"abonne") == 0)){
                   echo '<li><a href="../php/mes_emprunts.php">Mes emprunts</a></li>
                   <li><a href="../php/monCompte.php">Mon Compte</a></li>';
