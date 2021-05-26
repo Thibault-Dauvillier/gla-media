@@ -40,14 +40,17 @@
 
         <?php /*require('sharedfile/header.inc.php'); */?>
         <div class = "title">
-            <h1>Médiathèque GTA</h1>
+            <h1>A propos de la médiathèque</h1>
         </div>
         <div class="box">
-				<h3> Cette médiathèque est une médiathèque virtuelle, créer dans le but du Projet de GLA de l'année 2020-2021.
-        Moi j'aurais bien aimer la faire en Angular et React, ça aurait pu etre trop bien, mais malheuresement j'ai trop la flemme, en plus Angular ça a l'air long et tout.
-        Après React c'est bien aussi mais pareil c'est long. Vue.js ça a l'air vraiment une bonne alternative mais c'est un petit peu plus limiter
-        Mais c'est tout aussi bien. Mais ce que j'aurais vraiment aimer faire c'est du GraphQL, enfaite c'est un un type de querry trop bien pour manipuler des APIs.</h3>
-</div>
+				<h3>Adresse : 16 Rue des Sénéchaux, Coursac, 24430</h3>
+        <h3>Horraires:</h3>
+        <h3>Lundi: 9-17h </h3>
+        <h3>Mardi: 9-17h </h3>
+        <h3>Mercredi: 8-18h </h3>
+        <h3>Jeudi: 8-18h </h3>
+        <h3>Vendredi: 9-12h </h3>
+      </div>
       <!--<p>Travail fait par Alexandre , Thibault , Ghenima</p></br>
 
       <p>Encadreurs : </p>
