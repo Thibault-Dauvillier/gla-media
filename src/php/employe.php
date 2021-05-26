@@ -86,12 +86,12 @@
                  <td>'.$debut.'</td>
                  <td>'.$retour.'</td>';
                  if($prolongeable == 1){
-                  echo '<td> <a href ="reserver.php"</a>Prolonger</td>';
+                  echo '<td> <a href ="employe.php?id_empP='.$id.'"</a>Prolonger</td>';
                  }
                  else{
                   echo "<td>Cet emprunt n'est pas prolongeable</td>";
                  }
-                echo '<td> <a href ="reserver.php"</a>Supprimer</td>';
+                echo '<td> <a href ="employe.php?id_empS='.$id.'"</a>Supprimer</td>';
              echo '</tr>';
       }
       // Free result set
@@ -139,7 +139,7 @@
                  }
                  echo '
                  <td>'.$date.'</td>
-                 <td> <a href ="reserver.php"</a>Verouiller</td>';
+                 <td> <a href ="employe.php?id_p='.$id.'"</a>Verouiller</td>';
              echo '</tr>';
       }
       // Free result set
@@ -149,6 +149,61 @@
 
 
     $mysqli -> close();
+
+
+    function prolonger($id_empP) {
+
+      $servername = "localhost";
+      $username = "root";
+      $password = "";
+      $db="gla_database";
+
+      // Create connection
+      $mysqli = new mysqli($servername, $username, $password,$db);
+      $sql=" CALL etendre_emprunt(".$id_emP.")";
+      $mysqli->query($sql);
+      //close
+    }
+
+
+    function supprimer($id_empS) {
+
+      $servername = "localhost";
+      $username = "root";
+      $password = "";
+      $db="gla_database";
+
+      // Create connection
+      $mysqli = new mysqli($servername, $username, $password,$db);
+      $sql=" DELETE FROM EMPRUNT WHERE id_emprunt =".$id_empS.";";
+      $mysqli->query($sql);
+      //close
+    }
+
+
+    function lock($id_p) {
+
+      $servername = "localhost";
+      $username = "root";
+      $password = "";
+      $db="gla_database";
+
+      // Create connection
+      $mysqli = new mysqli($servername, $username, $password,$db);
+      $sql=" CALL lock_account(".$id_p.")"; //".$_SESSION["id"]."
+      $mysqli->query($sql);
+      //close
+    }
+
+    if (isset($_GET['id_empP'])) {
+      creer($_GET['id_empP']);
+    }
+    if (isset($_GET['id_empS'])) {
+      creer($_GET['id_empS']);
+    }
+    if (isset($_GET['id_p'])) {
+      creer($_GET['id_p']);
+    }
     ?>
 
   </body>
