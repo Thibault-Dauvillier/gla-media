@@ -11,6 +11,7 @@
             <li><a href="index.php"> Accueil</a></li>
             <li><a href="a_propos.php">À propos de la médiathèque</a></li>
             <li><a href="consulter_catalogue.php">Consulter le catalogue</a></li>
+            <li><a href="deconnection.php">Se deconnecter</a></li>
             <?php
             session_start();
             if(!isset($_SESSION["id"])){
