@@ -93,7 +93,7 @@
                  <td>'.$auteur.'</td>
                  <td>'.$genre.'</td>';
                  if(isset($_SESSION["id"])){
-                echo'<td> <a href ="consulter_catalogue.php?id='.$id_p.'"</a> Reserver</td>';
+                echo'<td> <a onClick= "this.disabled=true" href ="consulter_catalogue.php?id='.$id_p.'"</a> Reserver</td>';
                  }else{
                    echo'<td> <B> veuillez vous connectez pour emprunter les documents </B><td>';
                  }
@@ -147,7 +147,7 @@
                  <td>'.$genre.'</td>
                  <td>'.$duree.'</td>';
                  if(isset($_SESSION["id"])){
-                echo'<td> <a href ="consulter_catalogue.php?id='.$id_p.'"</a> Reserver</td>';
+                echo'<td> <a onClick= "this.disabled=true" href ="consulter_catalogue.php?id='.$id_p.'"</a> Reserver</td>';
                  }else{
                    echo'<td> <B> veuillez vous connectez pour emprunter les documents </B><td>';
                  }
@@ -201,7 +201,7 @@ if ($result = $connection->conn -> query($query)) {
              <td>'.$genre.'</td>
              <td>'.$duree.'</td>';
              if(isset($_SESSION["id"])){
-            echo'<td> <a href ="consulter_catalogue.php?id='.$id_p.'"</a> Reserver</td>';
+            echo'<td> <a onClick= "this.disabled=true" href ="consulter_catalogue.php?id='.$id_p.'"</a> Reserver</td>';
              }else{
                echo'<td> <B> veuillez vous connectez pour emprunter les documents </B><td>';
              }
